@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Huella Digital — demo</title>
+<link rel="stylesheet" href="carbon-calculator.css">
+</head>
+<body style="margin:0;padding:2em 1em;background:#f4f4f7;">
+
+<div class="cc-wrap" id="cc-wrap">
+
+<!-- CARD FORMULARIO -->
+<div class="cc-card">
+    <p class="cc-title">Calculadora de Huella Digital</p>
+    <p class="cc-sub">
+        Estima las emisiones de CO₂ de cualquier sitio web.<br>
+        Modelo: <strong>Sustainable Web Design v3</strong> · Green Web Foundation &nbsp;·&nbsp;
+        Alcance: Scope 2 + Scope 3 cat. 11 (GHG Protocol)
+    </p>
+
+    <div class="cc-field">
+        <label for="cc-url">URL del sitio web (opcional)</label>
+        <input type="url" id="cc-url" placeholder="https://ejemplo.com" autocomplete="off" spellcheck="false">
+        <p class="cc-hint">Si la introduces, verificamos automáticamente si el hosting usa energía renovable y la intensidad de la red eléctrica del país del servidor. Sitios con CDN pueden mostrar la ubicación del nodo, no del datacenter real.</p>
+    </div>
+    <div class="cc-field">
+        <label for="cc-bytes">Peso de página (KB)</label>
+        <input type="number" id="cc-bytes" placeholder="Ej: 1500" min="1">
+        <p class="cc-hint">Abre las <strong>DevTools</strong> de tu navegador (tecla F12) → pestaña <strong>Red</strong> (o "Network") → recarga la página → busca la <strong>barra de resumen al final, abajo del todo</strong> (no una columna): pone algo como "13 requests · 250 kB transferred". Usa ese número en KB.</p>
+    </div>
+    <div class="cc-field">
+        <label for="cc-visits">Visitas mensuales</label>
+        <input type="number" id="cc-visits" placeholder="Ej: 10000" min="1">
+    </div>
+    <div class="cc-field">
+        <label for="cc-green-manual">¿El hosting usa energía renovable? <span style="font-weight:400">(solo si no has puesto la URL arriba)</span></label>
+        <select id="cc-green-manual">
+            <option value="unknown">No lo sé</option>
+            <option value="true">Sí, verificado</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+    <div class="cc-field">
+        <label for="cc-country">País del servidor <span style="font-weight:400">(solo si no has puesto la URL arriba)</span></label>
+        <select id="cc-country">
+            <option value="ESP">España (146 gCO₂/kWh)</option>
+            <option value="DEU">Alemania (342 gCO₂/kWh)</option>
+            <option value="FRA">Francia (44 gCO₂/kWh)</option>
+            <option value="NLD">Países Bajos (253 gCO₂/kWh)</option>
+            <option value="IRL">Irlanda (280 gCO₂/kWh)</option>
+            <option value="USA">Estados Unidos (384 gCO₂/kWh)</option>
+            <option value="WORLD">Media mundial (473 gCO₂/kWh)</option>
+        </select>
+    </div>
+
+    <button class="cc-btn" id="cc-calc-btn">Calcular huella digital</button>
+    <div class="cc-loading" id="cc-loading"><span class="cc-spin"></span>Analizando la web (puede tardar hasta 1 minuto)…</div>
+    <div class="cc-error" id="cc-error"></div>
+</div>
+
+<!-- CARD RESULTADOS -->
+<div class="cc-card cc-results" id="cc-results">
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.4em;margin-bottom:1.1em;">
+        <p class="cc-title" style="margin:0;">Resultados</p>
+        <span class="cc-badge" id="cc-hosting-badge">–</span>
+        <span class="cc-rating" id="cc-swd-rating" style="display:none;"></span>
+    </div>
+
+    <div class="cc-metrics">
+        <div class="cc-metric">
+            <div class="cc-mlabel">CO₂ por visita</div>
+            <div class="cc-mval" id="cc-r-pervisit">– <span class="cc-munit">g CO₂eq</span></div>
+        </div>
+        <div class="cc-metric">
+            <div class="cc-mlabel">CO₂ mensual estimado</div>
+            <div class="cc-mval" id="cc-r-monthly">– <span class="cc-munit">kg CO₂eq</span></div>
+        </div>
+        <div class="cc-metric">
+            <div class="cc-mlabel">Peso de página</div>
+            <div class="cc-mval" id="cc-r-size">– <span class="cc-munit">KB</span></div>
+        </div>
+        <div class="cc-metric">
+            <div class="cc-mlabel">Alcance GHG Protocol</div>
+            <div class="cc-mval" style="font-size:.85em;padding-top:.15em;">
+                Scope 2 indirecto<br><span class="cc-munit" style="font-size:.8em;">Scope 3 cat. 11</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intensidad red eléctrica -->
+    <div class="cc-grid-box" id="cc-grid-box">
+        Red eléctrica detectada: <strong id="cc-grid-country">–</strong> ·
+        Intensidad: <strong id="cc-grid-intensity">–</strong> gCO₂/kWh ·
+        Generación fósil: <strong id="cc-grid-fossil">–</strong>%<br>
+        <span class="cc-grid-src">Fuente: Ember / Green Web Foundation IP to CO2 API · Año <span id="cc-grid-year">–</span></span>
+    </div>
+
+    <!-- Comparativa sectorial -->
+    <div style="margin-bottom:1.2em;">
+        <div class="cc-compare-title">Comparativa sectorial (g CO₂eq / visita · HTTP Archive 2024)</div>
+        <div class="cc-bar-row">
+            <span class="cc-bar-lbl">Tu sitio</span>
+            <div class="cc-bar-track"><div class="cc-bar-fill u" id="cc-bar-u" style="width:0%"></div></div>
+            <span class="cc-bar-num" id="cc-bar-u-val">–</span>
+        </div>
+        <div class="cc-bar-row">
+            <span class="cc-bar-lbl">Media web (p50)</span>
+            <div class="cc-bar-track"><div class="cc-bar-fill a" style="width:50%"></div></div>
+            <span class="cc-bar-num">0.50 g</span>
+        </div>
+        <div class="cc-bar-row">
+            <span class="cc-bar-lbl">Top 10% más limpio</span>
+            <div class="cc-bar-track"><div class="cc-bar-fill b" style="width:9%"></div></div>
+            <span class="cc-bar-num">0.09 g</span>
+        </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="cc-disclaimer">
+        <strong>Metodología declarada:</strong>
+        Modelo <strong>Sustainable Web Design v3</strong> (Green Web Foundation, Apache 2.0) implementado de forma nativa.
+        Constantes: KWH_PER_GB=0.81 · Datacenter=15% · Red=14% · Dispositivo=52% · Producción=19%.
+        Medición de peso de página: importada manualmente por el usuario desde <strong>DevTools del navegador</strong>.
+        Resolución de dominio (si se indica URL): <strong>Cloudflare DNS over HTTPS</strong>.
+        Verificación hosting: <strong>Greencheck API v3</strong> (Green Web Foundation).
+        Intensidad red: <strong>IP to CO2 Intensity API</strong> (Green Web Foundation / Ember, CC BY-SA 4.0).<br>
+        Todas las consultas se hacen directamente desde tu navegador a estos servicios públicos: nada pasa por ningún servidor propio ni se guarda en ningún sitio.<br>
+        <strong>Alcance:</strong> Scope 2 indirecto + Scope 3 cat. 11 (GHG Protocol Corporate Standard).<br>
+        <strong>No incluye:</strong> fabricación de hardware, Scope 1, emisiones de dispositivos del usuario final.<br>
+        <strong>Limitación CDN/proxy:</strong> la IP detectada puede corresponder al nodo de distribución, no al datacenter real.<br>
+        Esta estimación <strong>no constituye verificación certificada</strong> ni reemplaza auditoría conforme a ISO 14064.
+    </div>
+
+    <button class="cc-dl-btn" id="cc-dl-btn">Descargar resumen de estimación (.txt)</button>
+</div>
+
+</div><!-- /.cc-wrap -->
+
+<script src="carbon-calculator.js"></script>
+</body>
+</html>
