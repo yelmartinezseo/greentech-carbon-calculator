@@ -15,15 +15,10 @@
     <p class="cc-title">Calculadora de Huella Digital</p>
     <p class="cc-sub">
         Estima las emisiones de CO₂ de cualquier sitio web.<br>
-        Modelo: <strong>Sustainable Web Design v3</strong> · Green Web Foundation &nbsp;·&nbsp;
+        Modelo: <strong>Sustainable Web Design v3</strong> (metodología pública de Green Web Foundation, implementación propia) &nbsp;·&nbsp;
         Alcance: Scope 2 + Scope 3 cat. 11 (GHG Protocol)
     </p>
 
-    <div class="cc-field">
-        <label for="cc-url">URL del sitio web (opcional)</label>
-        <input type="url" id="cc-url" placeholder="https://ejemplo.com" autocomplete="off" spellcheck="false">
-        <p class="cc-hint">Si la introduces, verificamos automáticamente si el hosting usa energía renovable y la intensidad de la red eléctrica del país del servidor. Sitios con CDN pueden mostrar la ubicación del nodo, no del datacenter real.</p>
-    </div>
     <div class="cc-field">
         <label for="cc-bytes">Peso de página (KB)</label>
         <input type="number" id="cc-bytes" placeholder="Ej: 1500" min="1">
@@ -34,28 +29,30 @@
         <input type="number" id="cc-visits" placeholder="Ej: 10000" min="1">
     </div>
     <div class="cc-field">
-        <label for="cc-green-manual">¿El hosting usa energía renovable? <span style="font-weight:400">(solo si no has puesto la URL arriba)</span></label>
+        <label for="cc-green-manual">¿El hosting usa energía renovable?</label>
         <select id="cc-green-manual">
             <option value="unknown">No lo sé</option>
             <option value="true">Sí, verificado</option>
             <option value="false">No</option>
         </select>
+        <p class="cc-hint">Consulta la web de tu proveedor de hosting o pregúntale directamente.</p>
     </div>
     <div class="cc-field">
-        <label for="cc-country">País del servidor <span style="font-weight:400">(solo si no has puesto la URL arriba)</span></label>
+        <label for="cc-country">País del servidor</label>
         <select id="cc-country">
-            <option value="ESP">España (146 gCO₂/kWh)</option>
-            <option value="DEU">Alemania (342 gCO₂/kWh)</option>
-            <option value="FRA">Francia (44 gCO₂/kWh)</option>
-            <option value="NLD">Países Bajos (253 gCO₂/kWh)</option>
-            <option value="IRL">Irlanda (280 gCO₂/kWh)</option>
-            <option value="USA">Estados Unidos (384 gCO₂/kWh)</option>
-            <option value="WORLD">Media mundial (473 gCO₂/kWh)</option>
+            <option value="ESP">España (129 gCO₂/kWh)</option>
+            <option value="DEU">Alemania (298 gCO₂/kWh)</option>
+            <option value="FRA">Francia (43 gCO₂/kWh)</option>
+            <option value="NLD">Países Bajos (235 gCO₂/kWh)</option>
+            <option value="IRL">Irlanda (238 gCO₂/kWh)</option>
+            <option value="USA">Estados Unidos (367 gCO₂/kWh)</option>
+            <option value="WORLD">Media mundial (445 gCO₂/kWh)</option>
         </select>
+        <p class="cc-hint">Si no lo sabes, consulta el panel de tu proveedor de hosting (suele indicar la región/datacenter) o usa "Media mundial".</p>
     </div>
 
     <button class="cc-btn" id="cc-calc-btn">Calcular huella digital</button>
-    <div class="cc-loading" id="cc-loading"><span class="cc-spin"></span>Analizando la web (puede tardar hasta 1 minuto)…</div>
+    <div class="cc-loading" id="cc-loading"><span class="cc-spin"></span>Calculando…</div>
     <div class="cc-error" id="cc-error"></div>
 </div>
 
@@ -90,10 +87,9 @@
 
     <!-- Intensidad red eléctrica -->
     <div class="cc-grid-box" id="cc-grid-box">
-        Red eléctrica detectada: <strong id="cc-grid-country">–</strong> ·
-        Intensidad: <strong id="cc-grid-intensity">–</strong> gCO₂/kWh ·
-        Generación fósil: <strong id="cc-grid-fossil">–</strong>%<br>
-        <span class="cc-grid-src">Fuente: Ember / Green Web Foundation IP to CO2 API · Año <span id="cc-grid-year">–</span></span>
+        País del servidor: <strong id="cc-grid-country">–</strong> ·
+        Intensidad: <strong id="cc-grid-intensity">–</strong> gCO₂/kWh<br>
+        <span class="cc-grid-src">Fuente: <span id="cc-grid-source">–</span> · Año <span id="cc-grid-year">–</span></span>
     </div>
 
     <!-- Comparativa sectorial -->
@@ -119,16 +115,14 @@
     <!-- Disclaimer -->
     <div class="cc-disclaimer">
         <strong>Metodología declarada:</strong>
-        Modelo <strong>Sustainable Web Design v3</strong> (Green Web Foundation, Apache 2.0) implementado de forma nativa.
+        Modelo <strong>Sustainable Web Design v3</strong> (metodología pública de Green Web Foundation), implementación propia e independiente — no reutiliza código ni datasets de terceros.
         Constantes: KWH_PER_GB=0.81 · Datacenter=15% · Red=14% · Dispositivo=52% · Producción=19%.
         Medición de peso de página: importada manualmente por el usuario desde <strong>DevTools del navegador</strong>.
-        Resolución de dominio (si se indica URL): <strong>Cloudflare DNS over HTTPS</strong>.
-        Verificación hosting: <strong>Greencheck API v3</strong> (Green Web Foundation).
-        Intensidad red: <strong>IP to CO2 Intensity API</strong> (Green Web Foundation / Ember, CC BY-SA 4.0).<br>
-        Todas las consultas se hacen directamente desde tu navegador a estos servicios públicos: nada pasa por ningún servidor propio ni se guarda en ningún sitio.<br>
+        Hosting verde y país del servidor: seleccionados a mano por el usuario.
+        Intensidad de red eléctrica: <strong>European Environment Agency</strong> (España, Alemania, Francia, Países Bajos, Irlanda — 2024), <strong>U.S. Energy Information Administration</strong> (EE. UU. — 2023), <strong>International Energy Agency</strong> (media mundial, informe Electricity 2025 — 2024).<br>
+        100% cliente: ningún dato sale de tu navegador, no se hace ninguna llamada a servicios externos, nada se guarda en ningún sitio.<br>
         <strong>Alcance:</strong> Scope 2 indirecto + Scope 3 cat. 11 (GHG Protocol Corporate Standard).<br>
         <strong>No incluye:</strong> fabricación de hardware, Scope 1, emisiones de dispositivos del usuario final.<br>
-        <strong>Limitación CDN/proxy:</strong> la IP detectada puede corresponder al nodo de distribución, no al datacenter real.<br>
         Esta estimación <strong>no constituye verificación certificada</strong> ni reemplaza auditoría conforme a ISO 14064.
     </div>
 
