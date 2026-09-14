@@ -390,7 +390,7 @@ calcBtn.addEventListener('click', function(){
     var country = document.getElementById('cc-country').value;
     var isGreenManual = gs === 'true' ? true : gs === 'false' ? false : null;
 
-    if (!kb || kb <= 0)        return showErr('Introduce el peso de página en KB.');
+    if (!kb || kb <= 0)        return showErr('Introduce el peso de página en KB (mira las DevTools de tu navegador).');
     if (!visits || visits < 1) return showErr('Introduce las visitas mensuales.');
 
     /* Cálculo 100% local, sin llamadas externas de ningún tipo */
