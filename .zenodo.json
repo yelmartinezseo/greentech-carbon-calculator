@@ -1,0 +1,33 @@
+{
+  "title": "Calculadora de Huella de Carbono Web",
+  "upload_type": "software",
+  "description": "Estima la huella de carbono digital de un sitio web con el modelo Sustainable Web Design v3, en el alcance Scope 2 indirecto y Scope 3 categoría 11 del GHG Protocol. Implementación propia, sin código ni datasets de terceros: la intensidad de la red eléctrica por país procede de fuentes oficiales citadas.",
+  "creators": [
+    {
+      "name": "Martínez, Yel",
+      "orcid": "0009-0003-0219-7265"
+    }
+  ],
+  "license": "gpl-2.0-or-later",
+  "keywords": [
+    "huella de carbono",
+    "sostenibilidad digital",
+    "Sustainable Web Design",
+    "GHG Protocol",
+    "Greentech"
+  ],
+  "language": "spa",
+  "related_identifiers": [
+    {
+      "identifier": "https://yel-martinez-portfolio.com/recursos/carbon-calculator/",
+      "relation": "isDocumentedBy",
+      "resource_type": "publication-other",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/yelmartinezseo/greentech-carbon-calculator",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
