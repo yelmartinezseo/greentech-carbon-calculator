@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "Si usas este software, cítalo con estos metadatos. El DOI apunta siempre a la versión más reciente."
+type: software
+title: "Calculadora de Huella de Carbono Web"
+abstract: "Estima el CO₂ de una web gratis con Sustainable Web Design v3 y GHG Protocol (alcance 2+3). Indicas hosting y país del servidor; es una estimación."
+authors:
+  - family-names: "Martínez"
+    given-names: "Yel"
+    alias: "yelmartinezseo"
+    affiliation: "Greentech"
+    website: "https://yel-martinez-portfolio.com"
+    orcid: "https://orcid.org/0009-0003-0219-7265"
+doi: "10.5281/zenodo.22771007"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22771007"
+    description: "DOI de concepto en Zenodo (todas las versiones)"
+license: GPL-2.0-or-later
+repository-code: "https://github.com/yelmartinezseo/greentech-carbon-calculator"
+url: "https://yel-martinez-portfolio.com/recursos/carbon-calculator/"
+keywords:
+  - "huella de carbono"
+  - "sostenibilidad digital"
+  - "Sustainable Web Design"
+  - "GHG Protocol"
+  - "Greentech"
+  - "open source"
